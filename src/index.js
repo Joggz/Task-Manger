@@ -67,6 +67,21 @@ app.patch('/users/:id', async (req, res) => {
   }
 })
 
+app.delete('/users/:id', async (req, res) => {
+    try {
+      const user = await User.findByIdAndDelete(req.params.id)
+
+      if(!user){
+        return res.status(404).send(e)
+      }
+
+      res.send(user)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+})
+
+
 app.post('/task', async (req, res) => {
   console.log(req.body)
   if (!req.body) return;
