@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcrypt');
 
-const User = mongoose.model('User', {
+const UsherSchema = new mongoose.Schema({
   name: {
     type: String
   },
@@ -39,10 +40,16 @@ const User = mongoose.model('User', {
   }
 })
 
-// const you = new User({
-//   name: 'Brad',
-//   age: 30,
-//   password: 'jno9ru38492303d'
-// })
+UsherSchema.pre('save', async function (next) {
+  const user = this;
+
+  if (user.isModified('password')){
+    user.password = await bcrypt.hash( user.password, 8 )
+  }
+
+})
+
+const User = mongoose.model('User', UsherSchema)
+
 
 module.exports = User;
