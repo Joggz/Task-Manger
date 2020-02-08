@@ -4,6 +4,21 @@ const User = require('../models/user')
 
 const route = new express.Router()
 
+
+route.post('/user/login', async (req, res) => {
+  try {
+    const user = await User.findByCredentials(req.body.email, req.body.password)
+
+    if( !user){
+        res.status(400).send()
+    }
+
+    res.status(200).send()
+  } catch (error) {
+    res.status(400).send()
+  }
+})
+
 route.post('/user', async (req, res) => {
   console.log(req.body)
   if (!req.body) return;
@@ -65,7 +80,7 @@ route.patch('/users/:id', async (req, res) => {
 
 route.delete('/users/:id', async (req, res) => {
     try {
-      
+
       const user = await User.findByIdAndDelete(req.params.id)
 
       if(!user){
