@@ -65,6 +65,7 @@ route.patch('/users/:id', async (req, res) => {
 
 route.delete('/users/:id', async (req, res) => {
     try {
+      
       const user = await User.findByIdAndDelete(req.params.id)
 
       if(!user){
