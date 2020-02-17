@@ -52,6 +52,7 @@ UsherSchema.methods.getAuthToken = async function(){
   const token = jwt.sign({_id: user._id.toString()}, 'userin')
   
   user.tokens = user.tokens.concat({token})
+  // console.log(user.tokens)
   await user.save()
   
 }

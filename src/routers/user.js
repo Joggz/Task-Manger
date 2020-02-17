@@ -6,10 +6,11 @@ const auth = require('../middleware/auth')
 const route = new express.Router()
 
 
-route.post('/user/login', async (req, res) => {
+route.post('/user/login', auth, async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password)
     const token = await user.getAuthToken()
+    
     if( !user){
         res.status(400).send()
     }
@@ -20,7 +21,7 @@ route.post('/user/login', async (req, res) => {
   }
 })
 
-route.post('/user', async (req, res) => {
+route.post('/user',   async (req, res) => {
   console.log(req.body)
   if (!req.body) return;
   const user = await new User(req.body);
@@ -37,14 +38,10 @@ route.post('/user', async (req, res) => {
   // user.save().then((user) => res.status(201).send(user)).catch(e => res.status(400).send(e))
 })
 
-route.get('/users', auth, async (req, res) => {
-  const user = await User.find({})
-  try {
-    res.status(200).send(user)
-
-  } catch (error) {
-    res.status(401).send(error)
-  }
+//get an individual user using the auth function(middleware)
+route.get('/users/me', auth, async (req, res) => {
+  // const user = await User.find({})
+  res.send(req.user)
 })
 
 route.get('/users/:id', async (req, res) => {
