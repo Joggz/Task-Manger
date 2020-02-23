@@ -6,31 +6,49 @@ const auth = require('../middleware/auth')
 const route = new express.Router()
 
 
-route.post('/user/login', auth, async (req, res) => {
+route.post('/user/login', async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password)
     const token = await user.getAuthToken()
-    
-    if( !user){
-        res.status(400).send()
+
+    if (!user) {
+      res.status(400).send()
     }
 
-    res.status(200).send({user, token})
+    res.status(200).send({ user, token })
   } catch (error) {
     res.status(400).send()
   }
 })
 
-route.post('/user',   async (req, res) => {
+route.post('/user/logout', auth, async (req, res) => {
+  try {
+
+    const removeToken = req.user.tokens.filter((token) => {
+      return token.token !== req.token
+    })
+    req.user.tokens = removeToken
+    console.log(req.user.tokens)
+    await req.user.save()
+
+
+    res.send()
+
+  } catch (error) {
+    res.status(500).send()
+  }
+})
+
+route.post('/user', async (req, res) => {
   console.log(req.body)
   if (!req.body) return;
   const user = await new User(req.body);
   try {
     await user.save()
-    const token = await  user.getAuthToken();
+    const token = await user.getAuthToken();
+    // console.log(token)
 
-
-    return res.status(201).send({user, token})
+    return res.status(201).send({ user, token })
   } catch (error) {
     res.status(400).send(e)
   }
@@ -66,7 +84,7 @@ route.patch('/users/:id', async (req, res) => {
 
   try {
     const user = await User.findById(req.params.id)
-    updates.forEach( update => user[update] = req.body[update] )
+    updates.forEach(update => user[update] = req.body[update])
     await user.save()
     // const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
 
@@ -80,18 +98,18 @@ route.patch('/users/:id', async (req, res) => {
 })
 
 route.delete('/users/:id', async (req, res) => {
-    try {
+  try {
 
-      const user = await User.findByIdAndDelete(req.params.id)
+    const user = await User.findByIdAndDelete(req.params.id)
 
-      if(!user){
-        return res.status(404).send(e)
-      }
-
-      res.send(user)
-    } catch (error) {
-      res.status(500).send(error)
+    if (!user) {
+      return res.status(404).send(e)
     }
+
+    res.send(user)
+  } catch (error) {
+    res.status(500).send(error)
+  }
 })
 
 module.exports = route

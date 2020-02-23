@@ -4,24 +4,39 @@ const jwt = require('jsonwebtoken')
 const auth = async (req, res, next) => {
   try {
   // verify token
-    const token = req.header('Authorization').replace('Bearer', '')
-    const T = token.trim()
+    const token = req.header('Authorization').replace('Bearer ', '')
+    console.log(token)
+    // const T = token.trim()
+    // console.log(T)
     const key = 'userin'
 
-    const decode = jwt.verify(T, key)
+    const decode = jwt.verify(token, key)
     console.log(decode)
-    const user = await User.findById({ _id: decode._id, 'tokens.token': token })
+    const user = await User.findById(decode._id)
     
+        if (!user) {
+          throw new Error()
+        }
 
-    if (!user) {
+    const checkToken = user.tokens.find(usertoken => usertoken.token === token)
+    console.log(checkToken)
+    console.log( token === checkToken)
+    if(!checkToken){
+      console.log('not matched')
       throw new Error()
     }
+    
+
+    
+    req.token = token
     req.user = user
+
+    
     
     next()
 
   } catch (error) {
-    res.status(401).send(error)
+    res.status(401).send({error: 'please authenticate'})
   }
 
 

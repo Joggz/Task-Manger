@@ -18,6 +18,7 @@ const UsherSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: true,
     trim: true,
     lowercase:true,
@@ -52,8 +53,9 @@ UsherSchema.methods.getAuthToken = async function(){
   const token = jwt.sign({_id: user._id.toString()}, 'userin')
   
   user.tokens = user.tokens.concat({token})
-  // console.log(user.tokens)
+  // console.log(token)
   await user.save()
+  return token
   
 }
 UsherSchema.statics.findByCredentials = async (email, password) => {
