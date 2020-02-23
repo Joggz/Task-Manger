@@ -48,6 +48,16 @@ const UsherSchema = new mongoose.Schema({
   }]
 })
 
+UsherSchema.methods.toJSON = function (){
+  const user = this
+  
+  const userObject = user.toObject()
+  delete userObject.password
+  delete userObject.tokens
+
+  return userObject 
+}
+
 UsherSchema.methods.getAuthToken = async function(){
   const user = this;
   const token = jwt.sign({_id: user._id.toString()}, 'userin')

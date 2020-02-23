@@ -15,7 +15,7 @@ route.post('/user/login', async (req, res) => {
       res.status(400).send()
     }
 
-    res.status(200).send({ user, token })
+    res.status(200).send({ user})
   } catch (error) {
     res.status(400).send()
   }
@@ -27,8 +27,8 @@ route.post('/user/logout', auth, async (req, res) => {
     const removeToken = req.user.tokens.filter((token) => {
       return token.token !== req.token
     })
-    req.user.tokens = removeToken
-    console.log(req.user.tokens)
+
+    req.user.tokens = removeToken 
     await req.user.save()
 
 
@@ -61,7 +61,7 @@ route.post('/user', async (req, res) => {
     // console.log(token)
 
     return res.status(201).send({ user, token })
-  } catch (error) {
+  } catch (e) {
     res.status(400).send(e)
   }
 
