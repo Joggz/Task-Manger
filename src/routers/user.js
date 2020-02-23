@@ -39,6 +39,18 @@ route.post('/user/logout', auth, async (req, res) => {
   }
 })
 
+route.post('/user/logoutAll', auth, async (req, res) => {
+  try {
+    req.user.tokens = []
+
+    await req.user.save()
+
+    res.send()
+  } catch (e) {
+    res.status(500).send(e)
+  }
+})
+
 route.post('/user', async (req, res) => {
   console.log(req.body)
   if (!req.body) return;
