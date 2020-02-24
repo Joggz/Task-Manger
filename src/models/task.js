@@ -9,7 +9,13 @@ const mongoose = require('mongoose');
      completed: {
        type: Boolean,
        default: false
+  },
+  owner:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
   }
+
 
 })
 // const task1 = new Tasks({

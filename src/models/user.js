@@ -48,6 +48,12 @@ const UsherSchema = new mongoose.Schema({
   }]
 })
 
+UsherSchema.virtual('tasks', {
+  ref: 'Task',
+  localField:'_id',
+  foreignField: 'owner'
+})
+
 UsherSchema.methods.toJSON = function (){
   const user = this
   

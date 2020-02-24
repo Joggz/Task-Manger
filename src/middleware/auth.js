@@ -5,13 +5,13 @@ const auth = async (req, res, next) => {
   try {
   // verify token
     const token = req.header('Authorization').replace('Bearer ', '')
-    console.log(token)
+    // console.log(token)
     // const T = token.trim()
     // console.log(T)
     const key = 'userin'
 
     const decode = jwt.verify(token, key)
-    console.log(decode)
+    // console.log(decode)
     const user = await User.findById(decode._id)
     
         if (!user) {
@@ -19,10 +19,10 @@ const auth = async (req, res, next) => {
         }
 
     const checkToken = user.tokens.find(usertoken => usertoken.token === token)
-    console.log(checkToken)
-    console.log( token === checkToken)
+    // console.log(checkToken)
+    // console.log( token === checkToken)
     if(!checkToken){
-      console.log('not matched')
+      // console.log('not matched')
       throw new Error()
     }
     
