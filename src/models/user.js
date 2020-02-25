@@ -47,7 +47,11 @@ const UsherSchema = new mongoose.Schema({
       required: true
     }
   }]
-})
+},{
+  timestamps: true
+}
+
+)
 
 UsherSchema.virtual('tasks', {
   ref: 'Task',
