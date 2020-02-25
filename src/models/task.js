@@ -28,5 +28,5 @@ const TaskSchema = new mongoose.Schema({
 //   description :  43, 
 //   // completed: 'false'
 // })
-const Tasks = mongoose.model('task', TaskSchema)
+const Tasks = mongoose.model('Tasks', TaskSchema)
 module.exports = Tasks;

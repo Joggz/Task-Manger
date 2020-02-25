@@ -54,7 +54,7 @@ const UsherSchema = new mongoose.Schema({
 )
 
 UsherSchema.virtual('tasks', {
-  ref: 'Task',
+  ref: 'Tasks',
   localField:'_id',
   foreignField: 'owner'
 })

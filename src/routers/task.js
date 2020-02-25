@@ -20,16 +20,39 @@ route.post('/task', auth, async (req, res) => {
     res.status(400).send(error)
   }
 })
-
+// GET /task?completed=true || false
+// GET /task?limit=int
 route.get('/task', auth, async (req, res) => {
 
   try {
-    const task = await Tasks.find({owner: req.user._id})
-    // await req.user.populate('tasks').execPopulate()
-    res.status(200).send(task)
+    // const task = await Tasks.find({owner: req.user._id})
+    const match = {}
+    const sort = {}
 
-  
-  } catch (error) {
+    if(req.query.completed){
+      match.completed = req.query.completed == 'true'
+      console.log(match)
+    }
+    if(req.query.sortBy){
+      const parts = req.query.sortBy.split(':')
+      sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+      // console.log(sort)
+    }
+    
+    await req.user.populate({
+      path: 'tasks',
+      match,
+      options: {
+        limit: parseInt(req.query.limit),
+        skip: parseInt(req.query.skip),
+        sort
+      }
+    }).execPopulate()
+    res.status(200).send(req.user.tasks)
+    
+    console.log(task)
+    
+  } catch (e) {
     res.status(404).send(e)
   }
 })
