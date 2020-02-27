@@ -41,6 +41,9 @@ const UsherSchema = new mongoose.Schema({
       }
     }
   },
+  avatar: {
+    type: Buffer
+  },
   tokens: [{
     token: {
       type: String,
@@ -49,7 +52,7 @@ const UsherSchema = new mongoose.Schema({
   }]
 },{
   timestamps: true
-}
+},
 
 )
 

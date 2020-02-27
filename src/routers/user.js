@@ -52,7 +52,6 @@ route.post('/user/logoutAll', auth, async (req, res) => {
 })
 
 const avatar = multer({
-  dest: 'avatars',
   limits: {
     fileSize: 1000000
   },
@@ -64,7 +63,10 @@ const avatar = multer({
   }
 }) 
 
-route.post('/user/me/avatar', avatar.single('avatar'), (req, res) => {
+route.post('/user/me/avatar', auth, avatar.single('avatar'), async (req, res) => {
+  req.user.avatar = req.file.buffer
+// console.log(req.file.buffer)
+  await req.user.save()
   res.send()
 }, (error, req, res, next) => {
         res.status(400).send({error: error.message})
