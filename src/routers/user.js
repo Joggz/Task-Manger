@@ -72,6 +72,15 @@ route.post('/user/me/avatar', auth, avatar.single('avatar'), async (req, res) =>
         res.status(400).send({error: error.message})
 })
 
+route.delete('/user/me/avatar', auth,  async (req, res) => {
+  req.user.avatar = undefined
+
+  await req.user.save()
+  res.send()
+}, (error, req, res, next) => {
+  res.status(400).send({error: error.message})
+})
+
 route.post('/user', async (req, res) => {
   console.log(req.body)
   if (!req.body) return;
