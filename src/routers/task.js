@@ -2,6 +2,7 @@ const express = require('express')
 const Tasks = require('../models/task')
 const auth = require('../middleware/auth')
 
+
 const route = new express.Router()
 
 route.post('/task', auth, async (req, res) => {
@@ -20,6 +21,8 @@ route.post('/task', auth, async (req, res) => {
     res.status(400).send(error)
   }
 })
+
+
 // GET /task?completed=true || false
 // GET /task?limit=int
 route.get('/task', auth, async (req, res) => {
